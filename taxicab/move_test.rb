@@ -95,13 +95,20 @@ describe Move do
     let(:x) { 3 }
     let(:y) { 4 }
 
-
     it 'the current x,y coordinates to the positions array' do
       mover.x = x
       mover.y = y
       mover.track_position
       expect(mover.positions.last[0]).to eq(x)
       expect(mover.positions.last[1]).to eq(y)
+    end
+  end
+
+  describe "was_i_here_before?" do
+    it 'returns true if Ive been at the current position before' do
+      mover.move("R4")
+      mover.move("R0") # Only rotates, doesnt move
+      expect(mover).to be_was_i_here_before
     end
   end
 end

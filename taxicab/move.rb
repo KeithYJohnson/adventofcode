@@ -33,6 +33,9 @@ class Move
     rotate(rotation)
     advance(magnitude)
     track_position
+    if was_i_here_before?
+      puts "Looks like we've been here before: #{current_position}"
+    end
   end
 
   def rotate(direction)
@@ -58,6 +61,18 @@ class Move
 
   def track_position
     self.positions << [x,y]
+  end
+
+  def was_i_here_before?
+    previous_positions.detect { |position| position == current_position }
+  end
+
+  def previous_positions
+    positions[0..-2] #Excludes the last and current position
+  end
+
+  def current_position
+    positions.last
   end
 end
 

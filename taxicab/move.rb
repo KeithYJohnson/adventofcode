@@ -2,7 +2,8 @@ class Move
   attr_accessor :instructions,
                 :current_direction,
                 :x,
-                :y
+                :y,
+                :positions
 
   ROTATION_TO_INT_MAP = {
     L: -1,
@@ -15,6 +16,7 @@ class Move
     #Starting point, all moves are relative to this starting position
     self.x = 0
     self.y = 0
+    self.positions = []
   end
 
   def perform
@@ -30,6 +32,7 @@ class Move
 
     rotate(rotation)
     advance(magnitude)
+    track_position
   end
 
   def rotate(direction)
@@ -51,6 +54,10 @@ class Move
     else
       raise "How many dimensions we got here?!"
     end
+  end
+
+  def track_position
+    self.positions << [x,y]
   end
 end
 

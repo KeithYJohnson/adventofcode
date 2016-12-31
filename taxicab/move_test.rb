@@ -90,4 +90,18 @@ describe Move do
       end
     end
   end
+
+  describe "#track_position" do
+    let(:x) { 3 }
+    let(:y) { 4 }
+
+
+    it 'the current x,y coordinates to the positions array' do
+      mover.x = x
+      mover.y = y
+      mover.track_position
+      expect(mover.positions.last[0]).to eq(x)
+      expect(mover.positions.last[1]).to eq(y)
+    end
+  end
 end

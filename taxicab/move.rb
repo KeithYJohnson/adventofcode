@@ -23,7 +23,7 @@ class Move
     instructions.each { |instruction|  move(instruction.strip) }
     puts "\nchange in x: #{x}"
     puts "change in y: #{y}"
-    puts "total_blocks: #{x + y}"
+    puts "blocks_away: #{blocks_away}"
   end
 
   def move(instruction)
@@ -34,7 +34,7 @@ class Move
     advance(magnitude)
     track_position
     if was_i_here_before?
-      puts "Looks like we've been here before: #{current_position}"
+      puts "Looks like we've been here before: #{current_position}, its #{blocks_away} blocks away"
     end
   end
 
@@ -73,6 +73,10 @@ class Move
 
   def current_position
     positions.last
+  end
+
+  def blocks_away
+    x.abs + y.abs
   end
 end
 

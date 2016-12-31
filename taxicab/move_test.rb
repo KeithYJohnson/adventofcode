@@ -105,10 +105,16 @@ describe Move do
   end
 
   describe "was_i_here_before?" do
+    before { mover.move("R4") }
+    
     it 'returns true if Ive been at the current position before' do
-      mover.move("R4")
       mover.move("R0") # Only rotates, doesnt move
       expect(mover).to be_was_i_here_before
+    end
+
+    it 'returns false if its a new position' do
+      mover.move("R4")
+      expect(mover).to_not be_was_i_here_before
     end
   end
 end

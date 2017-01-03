@@ -110,7 +110,7 @@ class Move
   end
 
   def blocks_away
-    x.abs + y.abs
+    current_position.map(&:abs).inject(:+)
   end
 end
 

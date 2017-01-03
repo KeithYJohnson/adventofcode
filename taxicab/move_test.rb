@@ -11,6 +11,17 @@ describe Move do
     end
   end
 
+  describe "visiting a location twice" do
+    let(:mover) { described_class.new("R8, R4, R4, R8") }
+
+    it 'correctly identifies the first one' do
+      mover.perform
+      twice_visited = mover.here_befores.first
+      expect(twice_visited[0]).to eq([4,0])
+      expect(twice_visited[1]).to eq(4)
+    end
+  end
+
   describe "#move" do
     it 'does stuff' do
       mover.move("R5")

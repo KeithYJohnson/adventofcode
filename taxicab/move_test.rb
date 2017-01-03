@@ -104,28 +104,51 @@ describe Move do
 
   describe "#track_position" do
     let(:x) { 3 }
-    let(:y) { 4 }
+    let(:y) { 0 }
+    let!(:old_num_positions) { mover.positions.length }
+    before { mover.x = x; mover.y = y }
 
-    it 'the current x,y coordinates to the positions array' do
-      mover.x = x
-      mover.y = y
+    it 'the ending coordinates will be the last element in the positions array' do
       mover.track_position
       expect(mover.positions.last[0]).to eq(x)
       expect(mover.positions.last[1]).to eq(y)
     end
-  end
 
-  describe "was_i_here_before?" do
-    before { mover.move("R4") }
-    
-    it 'returns true if Ive been at the current position before' do
-      mover.move("R0") # Only rotates, doesnt move
-      expect(mover).to be_was_i_here_before
+    it 'appends each step of the journey into the positions array' do
+      mover.track_position
+      expect(mover.positions).to eq([[0,0], [1,0], [2,0], [3,0]])
     end
 
-    it 'returns false if its a new position' do
-      mover.move("R4")
-      expect(mover).to_not be_was_i_here_before
+    context "change in y" do
+      let(:x) { 0 }
+      let(:y) { 3 }
+      let!(:old_num_positions) { mover.positions.length }
+      before { mover.x = x; mover.y = y }
+
+      it 'the ending coordinates will be the last element in the positions array' do
+        mover.track_position
+        expect(mover.positions.last[0]).to eq(x)
+        expect(mover.positions.last[1]).to eq(y)
+      end
+
+      it 'appends each step of the journey into the positions array' do
+        mover.track_position
+        expect(mover.positions).to eq([[0,0], [0,1], [0,2], [0,3]])
+      end
+    end
+  end
+
+  describe "#was_i_here_before?" do
+    context 'mover visits a position twice' do
+      subject { described_class.new("R1,L0,L1") }
+      before { subject.perform }
+      it { is_expected.to be_was_i_here_before }
+    end
+
+    context 'mover doesnt visit a postion twice' do
+      subject { described_class.new("R1,L0") }
+      before { subject.perform }
+      it { is_expected.to_not be_was_i_here_before }
     end
   end
 end

@@ -60,7 +60,41 @@ class Move
   end
 
   def track_position
-    self.positions << [x,y]
+    last_x = positions.last[0]
+    last_y = positions.last[1]
+
+    x_diff = last_x - x
+    y_diff = last_y - y
+
+    #Should really extend ruby's range object here
+    #be decrementable as well.  Also DRY this up
+    if x_diff.abs > 0
+      if last_x > x
+        (last_x - 1).downto(x) do |i|
+          positions << [i, y]
+          was_i_here_before?
+        end
+      else
+        (last_x...x).each do |i|
+          positions << [i + 1, y]
+          was_i_here_before?
+        end
+      end
+    end
+
+    if y_diff.abs > 0
+      if last_y > y
+        (last_y - 1).downto(y) do |i|
+          positions << [x, i]
+          was_i_here_before?
+        end
+      else
+        (last_y...y).each do |i|
+          positions << [x, i + 1]
+          was_i_here_before?
+        end
+      end
+    end
   end
 
   def was_i_here_before?

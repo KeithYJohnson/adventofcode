@@ -3,7 +3,8 @@ class Move
                 :current_direction,
                 :x,
                 :y,
-                :positions
+                :positions,
+                :here_befores
 
   ROTATION_TO_INT_MAP = {
     L: -1,
@@ -16,7 +17,8 @@ class Move
     #Starting point, all moves are relative to this starting position
     self.x = 0
     self.y = 0
-    self.positions = []
+    self.positions = [[0,0]]
+    self.here_befores = []
   end
 
   def perform
@@ -33,9 +35,6 @@ class Move
     rotate(rotation)
     advance(magnitude)
     track_position
-    if was_i_here_before?
-      puts "Looks like we've been here before: #{current_position}, its #{blocks_away} blocks away"
-    end
   end
 
   def rotate(direction)
@@ -98,7 +97,10 @@ class Move
   end
 
   def was_i_here_before?
-    previous_positions.detect { |position| position == current_position }
+    if previous_positions.detect { |position| position == current_position }
+      self.here_befores << [current_position, blocks_away]
+      puts "Looks like we've been here before: #{current_position}, its #{blocks_away} blocks away"
+    end
   end
 
   def previous_positions
@@ -117,3 +119,4 @@ end
 s = "L4, L3, R1, L4, R2, R2, L1, L2, R1, R1, L3, R5, L2, R5, L4, L3, R2, R2, L5, L1, R4, L1, R3, L3, R5, R2, L5, R2, R1, R1, L5, R1, L3, L2, L5, R4, R4, L2, L1, L1, R1, R1, L185, R4, L1, L1, R5, R1, L1, L3, L2, L1, R2, R2, R2, L1, L1, R4, R5, R53, L1, R1, R78, R3, R4, L1, R5, L1, L4, R3, R3, L3, L3, R191, R4, R1, L4, L1, R3, L1, L2, R3, R2, R4, R5, R5, L3, L5, R2, R3, L1, L1, L3, R1, R4, R1, R3, R4, R4, R4, R5, R2, L5, R1, R2, R5, L3, L4, R1, L5, R1, L4, L3, R5, R5, L3, L4, L4, R2, R2, L5, R3, R1, R2, R5, L5, L3, R4, L5, R5, L3, R1, L1, R4, R4, L3, R2, R5, R1, R2, L1, R4, R1, L3, L3, L5, R2, R5, L1, L4, R3, R3, L3, R2, L5, R1, R3, L3, R2, L1, R4, R3, L4, R5, L2, L2, R5, R1, R2, L4, L4, L5, R3, L4"
 m4 = Move.new(s)
 m4.perform
+p m4.here_befores.first
